@@ -1,3 +1,5 @@
 flask
 flask-sqlalchemy
+flask-httpauth
 pytest
+git+https://github.com/liamcryan/ieuler

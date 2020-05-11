@@ -12,6 +12,7 @@ setup(
     packages=['app'],
     zip_safe=False,
     install_requires=[
-        'flask', 'flask-sqlalchemy'
+        'flask', 'flask-sqlalchemy',
+        # ieuler - not on pypi
     ],
 )

@@ -1,8 +1,8 @@
-================================
-Interactive Project Euler Server
-================================
+=============
+ieuler server
+=============
 
-The server used in conjunction with Interactive Project Euler https://github.com/liamcryan/ieuler.
+The server used in conjunction with the ieuler cli: https://github.com/liamcryan/ieuler.
 
 
 API

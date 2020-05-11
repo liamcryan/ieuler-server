@@ -3,16 +3,27 @@ from typing import Union, List, Dict
 from app import db
 
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    problems = db.relationship('Problem', backref='user', lazy=True)
+
+    def __repr__(self):
+        return f'<User(name={self.name})'
+
+
 class Problem(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=False)
     solved = db.Column(db.Boolean)
     completed_on = db.Column(db.DateTime)
-    correct_answer = db.Column(db.String)  # not sure if answer can be int/float/etc
+    correct_answer = db.Column(db.Text)  # not sure if answer can be int/float/etc
 
     code = db.relationship('Code', backref='problem', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f'<Problem(id={self.id})>'
+        return f'<Problem(id={self.id}, user_id={self.user_id})>'
 
 
 class Code(db.Model):
@@ -24,7 +35,7 @@ class Code(db.Model):
     problem_id = db.Column(db.Integer, db.ForeignKey('problem.id'), nullable=False)
 
     def __repr__(self):
-        return f'<Code(problem_id={self.problem_id})>'
+        return f'<Code(problem_id={self.problem_id}, language={self.language})>'
 
 
 def to_dict(problem) -> Union[List, Dict]:

@@ -1,9 +1,12 @@
 import os
 
 from flask import Flask, request, jsonify
+from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
+from ieuler.client import Client
 
 db = SQLAlchemy()
+auth = HTTPBasicAuth()
 
 
 def create_app(test_config=None):
@@ -32,7 +35,14 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    @auth.verify_password
+    def verify_user(username, cookies):
+        client = Client()
+        if client.logged_in(username, cookies):
+            return True
+
     @app.route('/problems', methods=['POST', 'GET'])
+    @auth.login_required()
     def problems():
         if request.method == 'GET':
             _response = []
