@@ -1,6 +1,7 @@
+import json
 import os
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, current_app
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from ieuler.client import Client
@@ -15,11 +16,11 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(app.instance_path, 'ieuler.db'),
+        SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(app.instance_path, 'interactive-project-euler.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
     )
 
-    from .models import db, Problem, Code, to_dict
+    from .models import db, Problem, Code, to_dict, User
     db.init_app(app)
 
     if test_config is None:
@@ -37,11 +38,22 @@ def create_app(test_config=None):
 
     @auth.verify_password
     def verify_user(username, cookies):
+        if current_app.config['TESTING']:
+            return True
+
+        try:  # try to convert to dict
+            cookies = json.loads(cookies)
+        except (json.decoder.JSONDecodeError,):
+            pass
+
+        if not isinstance(cookies, dict):
+            return False
+
         client = Client()
         if client.logged_in(username, cookies):
             return True
 
-    @app.route('/problems', methods=['POST', 'GET'])
+    @app.route('/', methods=['POST', 'GET'])
     @auth.login_required()
     def problems():
         if request.method == 'GET':
@@ -54,6 +66,14 @@ def create_app(test_config=None):
         data = request.json
         if not isinstance(data, list):
             data = [data]
+
+        username = auth.current_user()
+        _user = User.query.filter_by(name=username).first()
+        if not _user:
+            _user = User(name=username)
+
+        db.session.add(_user)
+
         for d in data:
             _problem = Problem.query.filter_by(id=int(d['ID'])).first()
             if not _problem:
@@ -62,15 +82,19 @@ def create_app(test_config=None):
             _problem.solved = d.get('Solved')
             _problem.completed_on = d.get('completed_on')
             _problem.correct_answer = d.get('correct_answer')
+            _problem.user_id = _user.id
+
+            db.session.add(_problem)
 
             for k in d.get('code', []):
                 _code = Code(**{'language': k,
                                 'filecontent': d['code'][k]['filecontent'],
                                 'filename': d['code'][k]['filename'],
                                 'submission': d['code'][k]['submission']})
-                _problem.code.append(_code)
 
-            db.session.add(_problem)
+                _code.problem_id = _code.id
+
+                db.session.add(_code)
 
         db.session.commit()
 
