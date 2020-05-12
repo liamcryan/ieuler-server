@@ -1,0 +1,13 @@
+.idea/
+*.egg-info/
+venv/
+*.pyc
+/instance
+.coverage
+.gitignore
+Dockerfile
+MANIFEST.in
+README.rst
+setup.cfg
+setup.py
+tests/
