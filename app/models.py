@@ -14,7 +14,8 @@ class User(db.Model):
 
 
 class Problem(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=False)
+    id = db.Column(db.Integer, primary_key=True)
+    problem_number = db.Column(db.Integer)
     solved = db.Column(db.Boolean)
     completed_on = db.Column(db.DateTime)
     correct_answer = db.Column(db.Text)  # not sure if answer can be int/float/etc

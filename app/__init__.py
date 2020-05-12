@@ -75,10 +75,10 @@ def create_app(test_config=None):
         db.session.add(_user)
 
         for d in data:
-            _problem = Problem.query.filter_by(id=int(d['ID'])).first()
+            _problem = User.query.filter_by(name=username).join(Problem).filter_by(problem_number=int(d['ID'])).first()
             if not _problem:
                 _problem = Problem()
-            _problem.id = int(d['ID'])
+            _problem.problem_number = int(d['ID'])
             _problem.solved = d.get('Solved')
             _problem.completed_on = d.get('completed_on')
             _problem.correct_answer = d.get('correct_answer')
@@ -87,18 +87,20 @@ def create_app(test_config=None):
             db.session.add(_problem)
 
             for k in d.get('code', []):
-                _code = Code(**{'language': k,
-                                'filecontent': d['code'][k]['filecontent'],
-                                'filename': d['code'][k]['filename'],
-                                'submission': d['code'][k]['submission']})
-
-                _code.problem_id = _code.id
+                _code = User.query.filter_by(name=username).join(Problem).filter_by(problem_number=int(d['ID'])).join(Code).filter_by(language=k).first()
+                if not _code:
+                    _code = Code()
+                _code.language = k
+                _code.filecontent = d['code'][k]['filecontent']
+                _code.filename = d['code'][k]['filename']
+                _code.submission = d['code'][k]['submission']
+                _code.problem_id = _problem.id
 
                 db.session.add(_code)
 
         db.session.commit()
 
-        return jsonify({}), 200
+        return jsonify(data), 200
 
     with app.app_context():
         db.create_all()

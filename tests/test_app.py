@@ -19,3 +19,7 @@ def test_post(client, problems, app):
         for i, j in zip(_problems, problems):
             assert i.id == j['ID']
             assert i.code == []
+
+# todo
+#  test badly formatted cookies
+#  test wrong username/cookies
