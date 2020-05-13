@@ -5,7 +5,7 @@ from app import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
+    name = db.Column(db.String(30))
 
     problems = db.relationship('Problem', backref='user', lazy=True)
 
@@ -32,7 +32,7 @@ class Code(db.Model):
     language = db.Column(db.String(50))
     filecontent = db.Column(db.Text)
     filename = db.Column(db.String(50))
-    submission = db.Column(db.String)  # this will mirror the type of the correct answer
+    submission = db.Column(db.Text)  # this will mirror the type of the correct answer
     problem_id = db.Column(db.Integer, db.ForeignKey('problem.id'), nullable=False)
 
     def __repr__(self):
