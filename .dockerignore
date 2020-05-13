@@ -2,7 +2,7 @@
 *.egg-info/
 venv/
 *.pyc
-/instance
+instance/*.db
 .coverage
 .gitignore
 Dockerfile
@@ -11,3 +11,4 @@ README.rst
 setup.cfg
 setup.py
 tests/
+.git
