@@ -2,4 +2,5 @@
 *.egg-info/
 venv/
 *.pyc
-/instance
+/instance/*.db
+.env
