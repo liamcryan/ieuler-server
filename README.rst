@@ -2,7 +2,7 @@
 ieuler server
 =============
 
-The server used in conjunction with the ieuler cli: https://github.com/liamcryan/ieuler.
+The server used in conjunction with the ieuler cli: https://github.com/liamcryan/ieuler.  This server is intended to run on a remote location so that the code you have written to solve Project Euler problems is saved and can be retrieved.
 
 ::
 
@@ -54,3 +54,4 @@ Docker
 A simpler setup for MySQL would be to use the docker-compose.yml file.  The docker-compose.yml specifies a .env file.  Put the above MYSQL_USER=db, etc in this file.  Then::
 
     $ docker-compose up -d
+
