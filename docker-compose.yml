@@ -4,7 +4,6 @@ services:
     build: .
     ports:
       - 2718:2718
-    entrypoint: ["gunicorn", "-b", "0.0.0.0:2718", "app:create_app()"]
   ieuler-db:
     image: mysql
     env_file:

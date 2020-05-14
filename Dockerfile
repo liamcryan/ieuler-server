@@ -13,3 +13,7 @@ RUN pip3 install --trusted-host pypi.python.org --trusted-host files.pythonhoste
     && pip3 install gunicorn
 
 USER ieuler
+
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["/usr/local/ieuler/entrypoint.sh"]
