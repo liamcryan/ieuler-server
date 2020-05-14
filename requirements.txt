@@ -5,4 +5,4 @@ pytest
 git+https://github.com/liamcryan/ieuler
 python-dotenv
 PyMySQL
-PyMySQL[rsa]
+cryptography

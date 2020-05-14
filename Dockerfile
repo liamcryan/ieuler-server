@@ -9,11 +9,10 @@ WORKDIR /usr/local/ieuler
 RUN useradd -ms /bin/bash ieuler && chown -R ieuler: /usr/local/ieuler \
     && chown ieuler: /usr/local/var/app-instance
 
-RUN pip3 install --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org -r requirements.txt \
+RUN apt-get update -y \
+    && apt-get upgrade -y \
+    && apt-get install wait-for-it \
+    && pip3 install --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --trusted-host pypi.org -r requirements.txt \
     && pip3 install gunicorn
 
 USER ieuler
-
-RUN chmod +x entrypoint.sh
-
-ENTRYPOINT ["/usr/local/ieuler/entrypoint.sh"]

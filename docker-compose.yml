@@ -4,11 +4,15 @@ services:
     build: .
     ports:
       - 2718:2718
+    environment:
+      - DB_HOST=ieuler-db
+    env_file:
+      - .env
+    command: ["wait-for-it", "ieuler-db:3306", "--", "gunicorn", "-b", "0.0.0.0:2718", "app:create_app()"]
+
   ieuler-db:
     image: mysql
     env_file:
       - .env
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-    ports:
-      - 3306:3306
