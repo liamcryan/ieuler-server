@@ -53,7 +53,7 @@ def create_app(test_config=None):
         if client.logged_in(username, cookies):
             return True
 
-    @app.route('/', methods=['POST', 'GET'])
+    @app.route('/api/problems', methods=['POST', 'GET'])
     @auth.login_required()
     def problems():
         if request.method == 'GET':

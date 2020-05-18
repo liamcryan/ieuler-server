@@ -2,13 +2,12 @@ from app.models import Problem, User
 
 
 def test_get_empty(client):
-    rv = client.get('/')
+    rv = client.get('/api/problems')
     assert rv.json == []
 
 
 def test_post(client, problems, app):
-    rv = client.post('/', json=problems)
-    assert rv.json == {}
+    client.post('/api/problems', json=problems)
 
     with app.app_context():
         _user = User.query.first()
