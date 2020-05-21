@@ -47,7 +47,7 @@ def to_dict(problem) -> Union[List, Dict]:
                           'filename': c.filename,
                           'submission': c.submission}})
     return {
-        'ID': problem.id,
+        'ID': problem.problem_number,
         'Solved': problem.solved,
         'completed_on': problem.completed_on,
         'correct_answer': problem.correct_answer,

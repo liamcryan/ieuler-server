@@ -56,9 +56,15 @@ def create_app(test_config=None):
     @app.route('/api/problems', methods=['POST', 'GET'])
     @auth.login_required()
     def problems():
+        username = auth.current_user()
+
         if request.method == 'GET':
             _response = []
-            for p in Problem.query.all():
+            _user = User.query.filter_by(name=username).first()
+            if not _user:
+                return jsonify(_response), 200
+
+            for p in _user.problems:
                 _response.append(to_dict(p))
             return jsonify(_response), 200
 
@@ -67,7 +73,6 @@ def create_app(test_config=None):
         if not isinstance(data, list):
             data = [data]
 
-        username = auth.current_user()
         _user = User.query.filter_by(name=username).first()
         if not _user:
             _user = User(name=username)
@@ -87,7 +92,8 @@ def create_app(test_config=None):
             db.session.add(_problem)
 
             for k in d.get('code', []):
-                _code = User.query.filter_by(name=username).join(Problem).filter_by(problem_number=int(d['ID'])).join(Code).filter_by(language=k).first()
+                _code = User.query.filter_by(name=username).join(Problem).filter_by(problem_number=int(d['ID'])).join(
+                    Code).filter_by(language=k).first()
                 if not _code:
                     _code = Code()
                 _code.language = k
