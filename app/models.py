@@ -17,7 +17,7 @@ class Problem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     problem_number = db.Column(db.Integer)
     solved = db.Column(db.Boolean)
-    completed_on = db.Column(db.DateTime)
+    completed_on = db.Column(db.String(50))
     correct_answer = db.Column(db.Text)  # not sure if answer can be int/float/etc
 
     code = db.relationship('Code', backref='problem', lazy=True)
